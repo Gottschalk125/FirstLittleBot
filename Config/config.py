@@ -1,0 +1,2 @@
+SYMBOL = "TSLA"
+QTY = "1"
