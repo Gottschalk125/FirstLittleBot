@@ -1,9 +1,15 @@
 import time
-from Config.config import SYMBOL, QTY, BuyMax
+from Config.config import SYMBOL, QTY, BuyMax, Buypercent
 from AlpacaAPI.api import get_price, get_position, buy, sell
-from Logic.logic import should_buy, should_sell, fallback_brake, buymax
+from Logic.logic import should_buy, should_sell, fallback_brake, buymax, buy_percentage, validate_config
 
 ENTRY_PRICE = 0
+
+try:
+    validate_config()
+except ValueError as e:
+    print(f"Config error: {e}")
+    sys.exit(1)
 
 while True:
     try:
@@ -16,6 +22,9 @@ while True:
             if(BuyMax):
                 print(f"Buying {QTY} {SYMBOL} at {price}")
                 buymax(position)
+            if(Buypercent):
+                print(f"Buying {QTY} {SYMBOL} at {price}")
+                buy_percentage(position)
             print(f"Buying {QTY} {SYMBOL} at {price}")
             buy(SYMBOL, QTY)
             ENTRY_PRICE = price

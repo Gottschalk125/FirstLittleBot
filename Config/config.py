@@ -1,3 +1,6 @@
 SYMBOL = "TSLA"
 QTY = "1"
-BuyMax = True
+BuyMax = False
+Buypercent = True
+Percent = 0.05
+
