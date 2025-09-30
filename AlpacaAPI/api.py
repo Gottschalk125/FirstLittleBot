@@ -35,3 +35,7 @@ def sell(symbol, qty):
         type="market",
         time_in_force="gtc"
     )
+
+def get_cash():
+    account = api.get_account()
+    return float(account.cash)

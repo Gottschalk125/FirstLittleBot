@@ -1,7 +1,7 @@
 import time
-from Config.config import  SYMBOL, QTY
-from APICalls.api import get_price, get_position, buy, sell
-from Logic.logic import should_buy, should_sell, fallback_brake
+from Config.config import SYMBOL, QTY, BuyMax
+from AlpacaAPI.api import get_price, get_position, buy, sell
+from Logic.logic import should_buy, should_sell, fallback_brake, buymax
 
 ENTRY_PRICE = 0
 
@@ -13,6 +13,9 @@ while True:
         fallback_brake(position)
 
         if should_buy(position):
+            if(BuyMax):
+                print(f"Buying {QTY} {SYMBOL} at {price}")
+                buymax(position)
             print(f"Buying {QTY} {SYMBOL} at {price}")
             buy(SYMBOL, QTY)
             ENTRY_PRICE = price

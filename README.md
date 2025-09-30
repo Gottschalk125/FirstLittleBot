@@ -1,14 +1,6 @@
 Lets see whats gonna happen here
 Not finished yet, please don't use it at the moment 
-MISSING
-DOCKER COMMANDS
-HOW TO START THE SKRIPT
-REQUIERMENTS
-RESTRUCTURING
-WORK IN PROGRESS
-MAYBE REWORK
-MAYBE MACHINE LEARNING FOR DECIDING WHICH SHARE WOULD BE NICE
-Parallel working and trading different share
+
 
 # Bot for trading
 Because im a kinda lazy guy when it comes to invest and search for the best place to park your money.
