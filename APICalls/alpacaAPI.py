@@ -1,5 +1,7 @@
 import os
-
+#Kann hier noch raus, logik ist komplett aufgeteilt, lediglich für Docker file das es
+# keinen ärger macht solange das noch nicht angepasst ist
+#
 import alpaca_trade_api as tradeapi
 import time
 import os
