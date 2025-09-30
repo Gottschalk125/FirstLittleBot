@@ -8,4 +8,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["python", "APICalls/alpacaAPI.py"]
+CMD ["python", "APICalls/main.py"]
