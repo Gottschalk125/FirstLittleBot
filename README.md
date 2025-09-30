@@ -20,7 +20,8 @@ Not finished yet, please don't use it at the moment
 - [Contact](#contact)
 
 ## Overview
-Because I'm a kinda lazy guy when it comes to investing and searching for the best place to park your money, I built this bot.  
+Because I'm a kinda lazy guy when it comes to investing and searching for the best place to park your money, I built 
+this bot.  
 On top of that, I wanted to gain experience in bot development and server setup.  
 This project is a playground for learning and experimenting with automated trading.
 
