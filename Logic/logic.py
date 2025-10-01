@@ -1,5 +1,5 @@
 from AlpacaAPI.api import get_price, get_position, buy, sell, get_cash
-from Config.config import SYMBOL, QTY, Percent, BuyMax
+from Config.config import SYMBOL, QTY, Percent, BuyMax, Buypercent, BuyDifShares
 from main import ENTRY_PRICE
 
 def should_buy(position):
@@ -31,6 +31,16 @@ def buy_percentage(position):
     return 0
 
 def validate_config():
+    if not isinstance(SYMBOL, list) or not isinstance(QTY, list):
+        BuyDifShares = False
+        raise ValueError("SYMBOL and QTY must both be lists.")
+    if len(SYMBOL) != len(QTY):
+        BuyDifShares = False
+        raise ValueError("SYMBOL and QTY must have the same number of elements.")
+    if isinstance(SYMBOL, list) or isinstance(QTY, list):
+        BuyMax = False
+        Buypercent = False
+        BuyDifShares = True
     if(QTY <= 0):
         raise ValueError("QTY must be greater than 0")
     if(Percent <= 0 or Percent > 1):
