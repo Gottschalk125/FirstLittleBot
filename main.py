@@ -4,59 +4,32 @@ from Config.config import SYMBOL, QTY, BuyMax, Buypercent, BuyDifShares
 from AlpacaAPI.api import get_price, get_position, buy, sell
 from Logic.logic import should_buy, should_sell, fallback_brake, buymax, buy_percentage, validate_config
 
-ENTRY_PRICE = 0
+ENTRY_PRICE = {}
 
-try:
-    validate_config()
-except ValueError as e:
-    print(f"Config error: {e}")
-    sys.exit(1)
+def process_trade(symbol, qty):
+    try:
+        position = get_position(symbol)
+        price = get_price(symbol)
+
+        fallback_brake(position)
+
+        if should_buy(position):
+            print(f"Buying {qty} {symbol} at {price}")
+            buy(symbol, qty)
+            ENTRY_PRICE[symbol] = price
+        elif should_sell(position, price, ENTRY_PRICE.get(symbol, 0)):
+            print(f"Selling {qty} {symbol} at {price}")
+            sell(symbol, qty)
+        else:
+            print(f"Holding {symbol}. Current price: {price}")
+        time.sleep(0.3)
+    except Exception as e:
+        print(f"Error with {symbol}: {e}")
+        time.sleep(0.3)
 
 while True:
-    if(BuyDifShares == False):
-        try:
-            position = get_position(SYMBOL)
-            price = get_price(SYMBOL)
-
-            fallback_brake(position)
-
-            if should_buy(position):
-                if(BuyMax):
-                    print(f"Buying {QTY} {SYMBOL} at {price}")
-                    buymax(position)
-                if(Buypercent):
-                    print(f"Buying {QTY} {SYMBOL} at {price}")
-                    buy_percentage(position)
-                print(f"Buying {QTY} {SYMBOL} at {price}")
-                buy(SYMBOL, QTY)
-                ENTRY_PRICE = price
-            elif should_sell(position, price, ENTRY_PRICE):
-                print(f"Selling {QTY} {SYMBOL} at {price}")
-                sell(SYMBOL, QTY)
-            else :
-                print(f"Holding {SYMBOL}. Current price: {price}")
-            time.sleep(0.3)
-        except Exception as e:
-            print("Fehler:", e)
-            time.sleep(0.3)
-    if(BuyDifShares):
+    if not BuyDifShares:
+        process_trade(SYMBOL, QTY)
+    else:
         for i in range(len(SYMBOL)):
-            try:
-                position = get_position(SYMBOL[i])
-                price = get_price(SYMBOL[i])
-
-                fallback_brake(position)
-
-                if should_buy(position):
-                    print(f"Buying {QTY[i]} {SYMBOL[i]} at {price}")
-                    buy(SYMBOL[i], QTY[i])
-                    ENTRY_PRICE = price
-                elif should_sell(position, price, ENTRY_PRICE):
-                    print(f"Selling {QTY[i]} {SYMBOL[i]} at {price}")
-                    sell(SYMBOL[i], QTY[i])
-                else :
-                    print(f"Holding {SYMBOL[i]}. Current price: {price}")
-                time.sleep(0.3)
-            except Exception as e:
-                print("Fehler:", e)
-                time.sleep(0.3)
+            process_trade(SYMBOL[i], QTY[i])
