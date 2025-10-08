@@ -2,9 +2,15 @@ import sys
 import time
 from Config.config import SYMBOL, QTY, BuyMax, Buypercent, BuyDifShares
 from AlpacaAPI.api import get_price, get_position, buy, sell
+from Database.Storage.database import init_db
+from FastAPI.api import app
 from Logic.logic import should_buy, should_sell, fallback_brake, buymax, buy_percentage, validate_config
 
 ENTRY_PRICE = {}
+
+@app.on_event("startup")
+def on_startup():
+    init_db()
 
 def process_trade(symbol, qty):
     try:
