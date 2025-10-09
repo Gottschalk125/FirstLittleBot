@@ -1,18 +1,10 @@
 MAYBE MACHINE LEARNING FOR DECIDING WHICH SHARE WOULD BE NICE
-Parallel working and trading different share
 
 Frontend Dashboard: Build a web interface to visualize trades, performance, and bot status. Technologies:
 
 Streamlit (easy for Python, quick setup)
 
-Flask or FastAPI + React or Vue.js (for more flexibility and modern UI)
-
 Dash (Python-based, good for data visualization)
-
-Database Integration: Store trades, configs, and historical data. Technologies:
-SQLite (simple, file-based)
-PostgreSQL or MySQL (for more features and scalability)
-Use SQLAlchemy for ORM in Python
 
 Historical Analysis: Show charts of performance, drawdowns, win/loss ratio, etc. Use matplotlib, plotly, or integrate with the frontend.
 
@@ -22,7 +14,6 @@ Notifications: Send alerts via email, Telegram, or push notifications for trades
 
 Backtesting Module: Simulate strategies on historical data before live trading.
 
-API: Expose bot status and trade history via REST API for integration.
 These features will make your bot more robust and user-friendly. For the frontend, Streamlit is a good starting point for quick results.
 
 On the function side for your bot, you could add:

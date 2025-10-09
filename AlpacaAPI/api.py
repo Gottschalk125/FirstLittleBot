@@ -1,7 +1,8 @@
 import os
 from dotenv import load_dotenv
 import alpaca_trade_api as tradeapi
-from Database.ControlDB.trade_repository import add_trade
+
+from Database.ControlDB.trade_repository import repo
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -27,7 +28,7 @@ def buy(symbol, qty):
         type="market",
         time_in_force="gtc"
     )
-    add_trade(symbol, qty, get_price(symbol), "buy")
+    repo.add_trade(symbol, qty, get_price(symbol), "buy")
 
 def sell(symbol, qty):
     api.submit_order(
@@ -37,7 +38,7 @@ def sell(symbol, qty):
         type="market",
         time_in_force="gtc"
     )
-    add_trade(symbol, qty, get_price(symbol), "sell")
+    repo.add_trade(symbol, qty, get_price(symbol), "sell")
 
 def get_cash():
     account = api.get_account()

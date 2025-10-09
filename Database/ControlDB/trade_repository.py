@@ -1,8 +1,6 @@
 from Database.Storage.database import get_connection
 
 
-repo = TradeRepository()
-
 class TradeRepository:
 
     def add_trade(self, symbol:str, qty:int, price:float, side:str):
