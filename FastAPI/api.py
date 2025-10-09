@@ -1,7 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from pydantic import BaseModel
 from typing import List, Optional
-
+from Database.ControlDB.trade_repository import repo
 from AlpacaAPI.api import get_cash
 
 app = FastAPI()
@@ -51,3 +51,24 @@ def start_trading():
 def stop_trading():
     trading_status["running"] = False
     return {"message": "Trading stopped", "status": trading_status}
+
+@app.get("/trades")
+def get_all_trades():
+    trades = repo.get_all_trades()
+    return trades
+
+@app.get("/trades/{symbol}")
+def get_trades_by_symbol(symbol: str):
+    """Trades für ein bestimmtes Symbol"""
+    trades = repo.get_trades_by_symbol(symbol)
+    return {"symbol": symbol, "trades": trades}
+
+
+@app.get("/trades/range")
+def get_trades_in_range(
+    starttime: str = Query(..., description="Startzeit, z.B. 2025-10-07 00:00:00"),
+    endtime: str = Query(..., description="Endzeit, z.B. 2025-10-08 00:00:00")
+):
+    """Trades in einem bestimmten Zeitbereich abrufen"""
+    trades = repo.get_trades_in_time_range(starttime, endtime)
+    return {"start": starttime, "end": endtime, "trades": trades}
