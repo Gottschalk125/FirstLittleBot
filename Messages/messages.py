@@ -3,7 +3,10 @@ import smtplib
 from email.message import EmailMessage
 import ssl
 
-from Config.config import EMAILUSER
+from AlpacaAPI.api import get_cash
+from Config.config import EMAILUSER, STARTVALUE
+from FastAPI.api import get_all_trades, get_trades_in_range
+from Logic.logic import get_today_timestamp_range
 
 EMAILSENDER = os.getenv("EMAIL")
 PASSWORD = os.getenv("PASSWORD")
@@ -30,15 +33,22 @@ def send_email(subject, body):
         print(f"An error occurred: {e}")
 
 
-def send_warning():
+def send_warning(position):
     subject = "Warning: Stock Price Drop Alert"
-    body = ("Your stock has reached the knockout point, please have a look at it and take some actions if necessary. \n"
+    body = ("Your stock" + str(position) + "has reached the knockout point, please have a look at it and take some actions if necessary. \n"
             "This is an automated message, please do not reply. Any reply won`t be read or answered.")
     send_email(subject, body)
 
 
 def send_dayly_report():
+    numberoftrades = sum(get_trades_in_range(get_today_timestamp_range()))
+    cash = get_cash()
+    moneymade = cash - STARTVALUE
     subject = "Daily Report"
     body = ("This is you daily report. \n"
             "This is an automated message, please do not reply. Any reply won`t be read or answered. \n"
-            "")
+            "Today you made " + str(numberoftrades) + " trades. \n"
+            "You made a total of " + str(moneymade) + " $ today. \n"
+            "Your total balance is after today" + str(cash) + "\n"                                  
+            "For further information please check your dashboard.")
+    send_email(subject, body)

@@ -8,3 +8,6 @@ BuyDifShares = False
 #Personal Informations
 EMAILUSER=""
 
+#no possibility to set following variables
+STARTVALUE = 0
+
