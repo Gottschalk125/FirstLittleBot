@@ -7,7 +7,8 @@ from Config.config import SYMBOL, QTY, BuyMax, Buypercent, BuyDifShares
 from AlpacaAPI.api import get_price, get_position, buy, sell
 from Database.Storage.database import init_db
 from FastAPI.api import app
-from Logic.logic import should_buy, should_sell, fallback_brake, buymax, buy_percentage, validate_config, is_market_open
+from Logic.tradinglogic import should_buy, should_sell, fallback_brake, buymax, buy_percentage, validate_config
+from Logic.timelogic import is_market_open
 
 ENTRY_PRICE = {}
 MARKET_TIMEZONE = pytz.timezone('America/New_York')

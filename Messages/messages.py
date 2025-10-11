@@ -6,7 +6,7 @@ import ssl
 from AlpacaAPI.api import get_cash
 from Config.config import EMAILUSER, STARTVALUE
 from FastAPI.api import get_all_trades, get_trades_in_range
-from Logic.logic import get_today_timestamp_range
+from Logic.timelogic import get_today_timestamp_range
 
 EMAILSENDER = os.getenv("EMAIL")
 PASSWORD = os.getenv("PASSWORD")
