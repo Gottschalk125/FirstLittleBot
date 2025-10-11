@@ -1,39 +1,22 @@
+-------------------------------------------------------------
+currently working on:
+-second strategy for trading. currrently reading ehich to add
+-------------------------------------------------------------
+
 MAYBE MACHINE LEARNING FOR DECIDING WHICH SHARE WOULD BE NICE
 
 Frontend Dashboard: Build a web interface to visualize trades, performance, and bot status. Technologies:
-
-Streamlit (easy for Python, quick setup)
-
-Dash (Python-based, good for data visualization)
 
 Historical Analysis: Show charts of performance, drawdowns, win/loss ratio, etc. Use matplotlib, plotly, or integrate with the frontend.
 
 User Authentication: If you want multi-user support, add login and user management.
 
-Notifications: Send alerts via email, Telegram, or push notifications for trades/events.
-
 Backtesting Module: Simulate strategies on historical data before live trading.
 
-These features will make your bot more robust and user-friendly. For the frontend, Streamlit is a good starting point for quick results.
-
-On the function side for your bot, you could add:
-
-Risk Management: Functions to set stop-loss, take-profit, and position sizing rules.
-
 Strategy Selection: Allow switching between different trading strategies (e.g., trend following, mean reversion).
-
-Trade Logging: Automatically log every trade with details (timestamp, symbol, qty, price, result).
 
 Performance Metrics: Calculate and display metrics like Sharpe ratio, win rate, average profit/loss.
 
 Error Handling: Robust error and exception handling for API failures or network issues.
-
-Scheduling: Run trades at specific times or intervals.
-
-Paper Trading vs. Live Trading: Toggle between simulation and real trading modes.
-
-Multi-Asset Support: Trade multiple symbols in parallel.
-
-Notifications: Send alerts for trade executions, errors, or threshold events.
 
 Config Reloading: Reload config without restarting the bot.
