@@ -1,41 +1,44 @@
-import smtplib
-import sys
 import os
-from dotenv import load_dotenv
+import smtplib
+from email.message import EmailMessage
+import ssl
 
-from Config.config import Phone_number
+from Config.config import EMAILUSER
 
-Carriers = {
-    "att": "@mms.att.net",
-    "tmobile": "@tmomail.net",
-    "verizon": "@vtext.com",
-    "sprint": "@messaging.sprintpcs.com"
-}
-load_dotenv()
-Email = os.getenv("EMAIL")
-Password = os.getenv("PASSWORD")
-
-def send_message(carrier, message):
-    phone_number = Phone_number
-    recipient = phone_number + Carriers[carrier]
-    auth = (Email, Password)
-
-    server = smtplib.SMTP("smtp.gmail.com", 587)
-    server.starttls()
-    server.login(auth[0], auth[1])
-
-    server.sendmail(auth[0], recipient, message)
+EMAILSENDER = os.getenv("EMAIL")
+PASSWORD = os.getenv("PASSWORD")
 
 
-# Delete lateron, not needed for my usage
-if __name__ == "__main__":
-    if len(sys.argv) < 4:
-        print(f"Usage: python3 {sys.argv[0]} <PHONE_NUMBER> <CARRIER> <MESSAGE>")
-        sys.exit(0)
+def send_email(subject, body):
+    msg = EmailMessage()
+    msg['Subject'] = subject
+    msg['From'] = EMAILSENDER
+    msg['To'] = EMAILUSER
+    msg.set_content(body)
 
-    phone_number = sys.argv[1]
-    carrier = sys.argv[2]
-    message = sys.argv[3]
+    context = ssl.create_default_context()
 
-    send_message(carrier, message)
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
 
+            server.login(EMAILSENDER, PASSWORD)
+            server.send_message(msg)
+
+        print("Email sent successfully!")
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
+def send_warning():
+    subject = "Warning: Stock Price Drop Alert"
+    body = ("Your stock has reached the knockout point, please have a look at it and take some actions if necessary. \n"
+            "This is an automated message, please do not reply. Any reply won`t be read or answered.")
+    send_email(subject, body)
+
+
+def send_dayly_report():
+    subject = "Daily Report"
+    body = ("This is you daily report. \n"
+            "This is an automated message, please do not reply. Any reply won`t be read or answered. \n"
+            "")
