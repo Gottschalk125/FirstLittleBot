@@ -12,18 +12,29 @@ config = {
     "BuyMax": False,
     "Buypercent": False,
     "Percent": 0.0,
-    "BuyDifShares": False
+    "BuyDifShares": False,
+    # NEUE STRATEGIE-MODI
+    "MODE_MOMENTUM": False,
+    "MODE_MEAN_REVERSION": True # Setzen Sie Ihre Standardstrategie auf True
 }
 
+
 account_balance = get_cash()
+trading_status = {"running": False}
+
 
 class ConfigUpdate(BaseModel):
+    # Bestehende Felder
     SYMBOL: Optional[List[str]] = None
     QTY: Optional[List[int]] = None
-    BuyMax: Optional[float] = None
-    Buypercent: Optional[float] = None
+    BuyMax: Optional[bool] = None  # Korrigiert von float zu bool/float je nach Ihrer Logik
+    Buypercent: Optional[bool] = None
     Percent: Optional[float] = None
     BuyDifShares: Optional[bool] = None
+
+    # NEUE STRATEGIE-FELDER
+    MODE_MOMENTUM: Optional[bool] = None
+    MODE_MEAN_REVERSION: Optional[bool] = None
 
 @app.put("/config")
 def update_config(update: ConfigUpdate):
@@ -39,8 +50,6 @@ def get_config():
 def get_account_balance():
     account_balance = get_cash()
     return account_balance
-
-trading_status = {"running": False}
 
 @app.post("/start")
 def start_trading():
