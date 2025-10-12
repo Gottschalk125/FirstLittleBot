@@ -1,6 +1,6 @@
 -------------------------------------------------------------
 currently working on:
--second strategy for trading. currrently reading ehich to add
+- break for today, will be back tomorrow or something like that
 -------------------------------------------------------------
 
 MAYBE MACHINE LEARNING FOR DECIDING WHICH SHARE WOULD BE NICE
@@ -12,8 +12,6 @@ Historical Analysis: Show charts of performance, drawdowns, win/loss ratio, etc.
 User Authentication: If you want multi-user support, add login and user management.
 
 Backtesting Module: Simulate strategies on historical data before live trading.
-
-Strategy Selection: Allow switching between different trading strategies (e.g., trend following, mean reversion).
 
 Performance Metrics: Calculate and display metrics like Sharpe ratio, win rate, average profit/loss.
 
