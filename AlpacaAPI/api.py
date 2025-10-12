@@ -1,8 +1,11 @@
 import os
 from dotenv import load_dotenv
 import alpaca_trade_api as tradeapi
+import pandas as pd
 
 from Database.ControlDB.trade_repository import repo
+from alpaca.data.requests import StockBarsRequest  # <--- HIER sind die fehlenden Klassen
+from alpaca.data.timeframe import TimeFrame
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -43,3 +46,18 @@ def sell(symbol, qty):
 def get_cash():
     account = api.get_account()
     return float(account.cash)
+
+def get_historical_data(symbol, timeframe=TimeFrame.Minute, limit=50):
+
+    request_params = StockBarsRequest(
+        symbol_or_symbols=[symbol],
+        timeframe=timeframe,  # z.B. TimeFrame.Minute
+        limit=limit
+    )
+
+    bars = api.get_stock_bars(request_params).df
+
+    if not bars.empty:
+        return bars.loc[symbol].reset_index(drop=False)
+
+    return pd.DataFrame()

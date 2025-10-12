@@ -2,12 +2,14 @@ import sys
 import time
 from datetime import datetime, time as dt_time
 import pytz
+from alpaca.data.timeframe import TimeFrame
 
-from Config.config import SYMBOL, QTY, BuyMax, Buypercent, BuyDifShares
-from AlpacaAPI.api import get_price, get_position, buy, sell
+from Config.config import SYMBOL, QTY, BuyMax, Buypercent, BuyDifShares, MODE_MOMENTUM, MODE_MEAN_REVERSION
+from AlpacaAPI.api import get_price, get_position, buy, sell, get_historical_data
 from Database.Storage.database import init_db
 from FastAPI.api import app
-from Logic.tradinglogic import should_buy, should_sell, fallback_brake, buymax, buy_percentage, validate_config
+from Logic.tradinglogic import should_buy, should_sell, fallback_brake, buymax, buy_percentage, validate_config, \
+    calculate_momentum_indicators, should_sell_momentum, should_buy_momentum
 from Logic.timelogic import is_market_open
 
 ENTRY_PRICE = {}
@@ -26,17 +28,59 @@ def process_trade(symbol, qty):
         position = get_position(symbol)
         price = get_price(symbol)
 
+        # Holen und Analysieren der Daten (nur nötig, wenn Momentum aktiv ist)
+        analyzed_data = None
+        if MODE_MOMENTUM:
+            historical_data = get_historical_data(symbol, timeframe=TimeFrame.Minute, limit=50)
+            analyzed_data = calculate_momentum_indicators(historical_data)
+
         fallback_brake(position)
 
-        if should_buy(position):
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] 🟢 BUY {qty} {symbol} at {price}")
-            buy(symbol, qty)
-            ENTRY_PRICE[symbol] = price
-        elif should_sell(position, price, ENTRY_PRICE.get(symbol, 0)):
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] 🔴 SELL {qty} {symbol} at {price}")
-            sell(symbol, qty)
+        # ---------------------------------
+        # A. VERKAUFS-LOGIK (PRIORITÄT 1)
+        # ---------------------------------
+        if position:
+            sold = False
+
+            # Prüfen auf Momentum-Verkauf (z.B. EMA 20 gebrochen)
+            if MODE_MOMENTUM and should_sell_momentum(symbol, analyzed_data, price, ENTRY_PRICE.get(symbol, 0)):
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] 🔴 SELL (Momentum Exit) {qty} {symbol} at {price}")
+                sell(symbol, qty)
+                sold = True
+
+            # Prüfen auf Standard-Verkauf (z.B. Gewinnziel/Stop-Loss der Dip-Strategie)
+            elif MODE_MEAN_REVERSION and should_sell(position, price, ENTRY_PRICE.get(symbol, 0)):
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] 🔴 SELL (Dip Exit) {qty} {symbol} at {price}")
+                sell(symbol, qty)
+                sold = True
+
+            if not sold:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] 🟡 HOLD {symbol}. Price: {price}")
+
+        # ---------------------------------
+        # B. KAUF-LOGIK (PRIORITÄT 2)
+        # ---------------------------------
         else:
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] 🟡 HOLD {symbol}. Price: {price}")
+            bought = False
+
+            # 1. Höhere Priorität: Mean Reversion (Dip-Kauf)
+            if MODE_MEAN_REVERSION and should_buy(position):
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] 🟢 BUY (Dip Entry) {qty} {symbol} at {price}")
+                buy(symbol, qty)
+                ENTRY_PRICE[symbol] = price
+                bought = True
+
+            # 2. Niedrigere Priorität: Momentum (Trend-Kauf)
+            elif MODE_MOMENTUM and analyzed_data is not None and should_buy_momentum(symbol, analyzed_data, price,
+                                                                                     position):
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] 🟢 BUY (Momentum Entry) {qty} {symbol} at {price}")
+                buy(symbol, qty)
+                ENTRY_PRICE[symbol] = price
+                bought = True
+
+            if not bought:
+                print(
+                    f"[{datetime.now().strftime('%H:%M:%S')}] 🟡 HOLD {symbol}. Current price: {price}. Kein Kaufsignal.")
 
         time.sleep(0.3)
 
