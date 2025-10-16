@@ -1,6 +1,7 @@
 -------------------------------------------------------------
 currently working on:
-- break for today, will be back tomorrow or something like that
+-rework database, with win or lose indicator for each trade, with value of profit or loss
+-start building a frontend dashboard to visualize trades, performance, and bot status
 -------------------------------------------------------------
 
 MAYBE MACHINE LEARNING FOR DECIDING WHICH SHARE WOULD BE NICE
@@ -16,5 +17,3 @@ Backtesting Module: Simulate strategies on historical data before live trading.
 Performance Metrics: Calculate and display metrics like Sharpe ratio, win rate, average profit/loss.
 
 Error Handling: Robust error and exception handling for API failures or network issues.
-
-Config Reloading: Reload config without restarting the bot.
