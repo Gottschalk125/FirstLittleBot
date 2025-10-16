@@ -1,5 +1,6 @@
 Lets see whats gonna happen here
 Not finished yet, please don't use it at the moment 
+Working for now on the dashboard for it in a seperate repository, will come back later an rework this piece of code 
 
 # Trading Bot
 
